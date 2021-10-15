@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\humbe\\curso_ef_core\\CursoEFCore.csproj": {}
+    "C:\\Users\\humbe\\Estudos\\EntityFrameworkCore\\CursoEFCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\humbe\\curso_ef_core\\CursoEFCore.csproj": {
+    "C:\\Users\\humbe\\Estudos\\EntityFrameworkCore\\CursoEFCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\humbe\\curso_ef_core\\CursoEFCore.csproj",
+        "projectUniqueName": "C:\\Users\\humbe\\Estudos\\EntityFrameworkCore\\CursoEFCore.csproj",
         "projectName": "CursoEFCore",
-        "projectPath": "C:\\Users\\humbe\\curso_ef_core\\CursoEFCore.csproj",
+        "projectPath": "C:\\Users\\humbe\\Estudos\\EntityFrameworkCore\\CursoEFCore.csproj",
         "packagesPath": "C:\\Users\\humbe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\humbe\\curso_ef_core\\obj\\",
+        "outputPath": "C:\\Users\\humbe\\Estudos\\EntityFrameworkCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\humbe\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -59,6 +59,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[5.0.10, )"
+            },
+            "Microsoft.Extensions.Logging.Console": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             }
           },
           "imports": [

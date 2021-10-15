@@ -1,18 +1,24 @@
 ﻿using CursoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CursoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
+        private static readonly ILoggerFactory _logger = LoggerFactory.Create(p=>p.AddConsole());
+
+        public DbSet<Pedido> Produtos { get; set; }
         public DbSet<Pedido> Clientes { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
-        public DbSet<Pedido> Produtos { get; set; }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {   // CLASSE RESPONSAVEL POR ESTABELECER UMA SESSÃO ENTRE A PLICAÇÃO E SEU BANCO DE DADOS
             // String de conexão:
-            optionsBuilder.UseSqlServer("Data source=(localdb)\\mssqllocaldb;Initial Catalog=CursoEFCore;Integrated Security=true");
+            optionsBuilder
+                .UseLoggerFactory(_logger)
+                .EnableSensitiveDataLogging()
+                .UseSqlServer("Data source=(localdb)\\mssqllocaldb;Initial Catalog=CursoEFCore;Integrated Security=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

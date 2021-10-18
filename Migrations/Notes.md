@@ -1,5 +1,5 @@
 ## Tips
 
-Comando para Aplicar Migrações:
+- Comando para Aplicar Migrações:
 
-dotnet ef database update -p CursoEFCore.csproj -v
+    dotnet ef database update -p CursoEFCore.csproj -v

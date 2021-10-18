@@ -67,12 +67,12 @@ namespace CursoEFCore
             };
 
             using var db = new Data.ApplicationContext();
-            // Eh recomendado escolher uma das 2 primeiras:
+            // Eh recomendado escolher uma das 2 primeiras opcoes abaixo:
 
             //db.Produtos.Add(produto);         //Deu pau, olhar depois.
             db.Set<Produto>().Add(produto);     // Dentro de Set informamos qual entidade desejamos interagir e em Add, a instancia
             //db.Entry(produto).State = EntityState.Added;
-            //db.Add(produto);
+            //db.Add(produto);                  // Nao escalavel, a aplicacao tem que descobrir o tipo do dade da variavel produto.
 
             // Ate entao as alteracoes nao foram para o banco de dados,
             // eh necessario informar ao EF Core que desejamos salvar as alteracoes.

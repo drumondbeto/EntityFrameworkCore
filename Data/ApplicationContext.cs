@@ -8,8 +8,8 @@ namespace CursoEFCore.Data
     {
         private static readonly ILoggerFactory _logger = LoggerFactory.Create(p=>p.AddConsole());
 
-        public DbSet<Pedido> Produtos { get; set; }
-        public DbSet<Pedido> Clientes { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

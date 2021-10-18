@@ -24,8 +24,25 @@ namespace CursoEFCore
             //Console.WriteLine("Hello World!");
 
             //InserirDados();
+            //InserirDadosEmMassa();
+            ConsultarDados();
+            
+        }
 
-            InserirDadosEmMassa();
+        private static void ConsultarDados()
+        {
+            using var db = new Data.ApplicationContext();
+
+            // Metodo 1:
+            //var consultaPorSintaxe = (from c in db.Clientes where c.Id>0 select c).ToList();
+
+            // Metodo 2:
+            var consultaPorMetodo = db.Clientes.Where(p=>p.Id >0).ToList();
+            foreach(var cliente in consultaPorMetodo)
+            {
+                Console.WriteLine($"Consultando Cliente: {cliente.Id}");
+                db.Clientes.Find(cliente.Id);
+            }
         }
 
         private static void InserirDadosEmMassa()
@@ -67,12 +84,22 @@ namespace CursoEFCore
             };
 
             using var db = new Data.ApplicationContext();
-            // Eh recomendado escolher uma das 2 primeiras opcoes abaixo:
+            // Eh recomendado escolher o metodo 1 ou 2:
 
-            //db.Produtos.Add(produto);         //Deu pau, olhar depois.
-            db.Set<Produto>().Add(produto);     // Dentro de Set informamos qual entidade desejamos interagir e em Add, a instancia
+            // Metodo 1:
+            //db.Produtos.Add(produto);         
+            // Deu pau, olhar depois.
+
+            // Metodo 2:
+            db.Set<Produto>().Add(produto);     
+            // Dentro de Set informamos qual entidade desejamos interagir e em Add, a instancia
+
+            // Metodo 3:
             //db.Entry(produto).State = EntityState.Added;
-            //db.Add(produto);                  // Nao escalavel, a aplicacao tem que descobrir o tipo do dade da variavel produto.
+
+            // Metodo 4:
+            //db.Add(produto);                  
+            // Nao escalavel, a aplicacao tem que descobrir o tipo do dade da variavel produto.
 
             // Ate entao as alteracoes nao foram para o banco de dados,
             // eh necessario informar ao EF Core que desejamos salvar as alteracoes.

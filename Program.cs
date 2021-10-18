@@ -26,7 +26,7 @@ namespace CursoEFCore
             //InserirDados();
             //InserirDadosEmMassa();
             ConsultarDados();
-            
+
         }
 
         private static void ConsultarDados()
@@ -36,12 +36,22 @@ namespace CursoEFCore
             // Metodo 1:
             //var consultaPorSintaxe = (from c in db.Clientes where c.Id>0 select c).ToList();
 
-            // Metodo 2:
-            var consultaPorMetodo = db.Clientes.Where(p=>p.Id >0).ToList();
+            // Metodo 2: (Recomendado)
+            var consultaPorMetodo = db.Clientes.AsNoTracking() 
+                // AsNoTracking() faz com que o EF Core nao rastreie os obj em memoria. 
+                // Forca a consultar direto na Base de Dados.
+                .Where(p=>p.Id >0)
+                .OrderBy(p=>p.Id)
+                .ToList();
+
             foreach(var cliente in consultaPorMetodo)
             {
                 Console.WriteLine($"Consultando Cliente: {cliente.Id}");
-                db.Clientes.Find(cliente.Id);
+
+                //db.Clientes.Find(cliente.Id);
+                // Primeiro consulta os objetos em memoria, dps na base de dados.
+
+                db.Clientes.FirstOrDefault(p=>p.Id==cliente.Id);
             }
         }
 

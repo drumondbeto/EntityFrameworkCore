@@ -93,7 +93,13 @@
             using var db = new Data.ApplicationContext();
             var cliente = db.Clientes.Find(1);
             cliente.Nome = "Cliente Alterado Passo 1";
+
             //db.Clientes.Update(cliente);        
             // Atualiza todos os atributos do objeto, não soh oq foi alterado.
+
+            db.Entry(cliente).State = EntityState.Modified;
+            // Informa de maneira explicita para o EF Core que o objeto foi modificado.
+            //Tambem ordena que todos os atributos daquele objeto devem ser atualizados.
+
             db.SaveChanges();
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CursoEFCore.Domain;
 using CursoEFCore.ValueObjects;
@@ -25,8 +26,57 @@ namespace CursoEFCore
 
             //InserirDados();
             //InserirDadosEmMassa();
-            ConsultarDados();
+            //ConsultarDados();
+            //CadastrarPedido();
+            //ConsultarPedidoCarregamentoAdiantado();
+            AtualizarDados();
+        }
 
+        private static void AtualizarDados()
+        {
+            using var db = new Data.ApplicationContext();
+            var cliente = db.Clientes.Find(1);
+            cliente.Nome = "Cliente Alterado Passo 1";
+            //db.Clientes.Update(cliente);        // Atualiza todos os atributos do objeto, não soh oq foi alterado
+            db.SaveChanges();
+        }
+
+        private static void ConsultarPedidoCarregamentoAdiantado()
+        {
+            using var db = new Data.ApplicationContext();
+            var pedidos = db
+            .Pedidos
+            .Include(p=>p.Itens)                // Carrega tambem os itens do pedido
+                .ThenInclude(p=>p.Produto)      // Carrega os produtos dos itens
+            .ToList();
+        }
+
+        private static void CadastrarPedido()
+        {
+            using var db = new Data.ApplicationContext();
+
+            var cliente = db.Clientes.FirstOrDefault();
+            var produto = db.Produtos.FirstOrDefault();
+
+            var pedido = new Pedido
+            {
+                ClienteId = cliente.Id,
+                IniciadoEm = DateTime.Now,
+                FinalizadoEm = DateTime.Now,
+                Observacao = "Pedido Teste",
+                Status = StatusPedido.Analise,
+                TipoFrete = TipoFrete.SemFrete,
+                Itens = new List<PedidoItem>
+                {
+                    new PedidoItem                
+                    {
+                        ProdutoId = produto.Id,
+                        Desconto = 0,
+                        Quantidade = 1,
+                        Valor = 10
+                    }
+                }
+            };
         }
 
         private static void ConsultarDados()
@@ -109,7 +159,7 @@ namespace CursoEFCore
 
             // Metodo 4:
             //db.Add(produto);                  
-            // Nao escalavel, a aplicacao tem que descobrir o tipo do dade da variavel produto.
+            // Nao escalavel, a aplicacao tem que descobrir o tipo do dado da variavel produto.
 
             // Ate entao as alteracoes nao foram para o banco de dados,
             // eh necessario informar ao EF Core que desejamos salvar as alteracoes.

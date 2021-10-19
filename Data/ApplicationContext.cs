@@ -13,7 +13,7 @@ namespace CursoEFCore.Data
         public DbSet<Pedido> Pedidos { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {   // CLASSE RESPONSAVEL POR ESTABELECER UMA SESSÃO ENTRE A PLICAÇÃO E SEU BANCO DE DADOS
+        {   // CLASSE RESPONSAVEL POR ESTABELECER UMA SESSÃO ENTRE A APLICAÇÃO E SEU BANCO DE DADOS
             // String de conexão:
             optionsBuilder
                 .UseLoggerFactory(_logger)

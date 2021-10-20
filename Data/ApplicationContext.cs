@@ -1,4 +1,6 @@
-﻿using CursoEFCore.Domain;
+﻿using System;
+using System.Linq;
+using CursoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -14,23 +16,29 @@ namespace CursoEFCore.Data
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {   // CLASSE RESPONSAVEL POR ESTABELECER UMA SESSÃO ENTRE A APLICAÇÃO E SEU BANCO DE DADOS
-            // String de conexão:
+            
             optionsBuilder
                 .UseLoggerFactory(_logger)
                 .EnableSensitiveDataLogging()
-                .UseSqlServer("Data source=(localdb)\\mssqllocaldb;Initial Catalog=CursoEFCore;Integrated Security=true");
+                // String de conexão:
+                .UseSqlServer("Data source=(localdb)\\mssqllocaldb;Initial Catalog=CursoEFCore;Integrated Security=true",
+                p=>p.EnableRetryOnFailure(  // Permite que a aplicacao tente se reconectar automaticamente em caso de queda.
+                    maxRetryCount: 2,       // Define o limite de tentativas.
+                    maxRetryDelay:          // Define o tempo de espera entre as tentativas.
+                    TimeSpan.FromSeconds(2),
+                    errorNumbersToAdd: null).MigrationsHistoryTable("curso_ef_core"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // MODOS DE GERAR AS TABELAS A PARTIR DE CASSES EXISTENTES:
 
-            //          MODO 1: IDENTIFICANDO AS CLASSES AUTOMATICAMENTE APARTIR DAS [...]Configurations.cs CRIADAS
-
+            // MODO 1: IDENTIFICANDO AS CLASSES AUTOMATICAMENTE APARTIR DAS [...]Configurations.cs CRIADAS
 
             // Procura as classes completas que estao complementando o IEntityTypeConfiguration:
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+            MapearPropriedadesEsquecidas(modelBuilder);
 
 
             /* 
@@ -99,6 +107,25 @@ namespace CursoEFCore.Data
                 p.Property(p => p.Desconto).IsRequired();
             });
             */
+        }
+
+        private void MapearPropriedadesEsquecidas(ModelBuilder modelBuilder)
+        {
+            // Como mapear propriadades nao configuradas:
+            foreach(var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entity.GetProperties().Where(p=>p.ClrType == typeof(string));
+
+                foreach(var property in properties)
+                {
+                    if(string.IsNullOrEmpty(property.GetColumnType())
+                        && !property.GetMaxLength().HasValue)
+                        {
+                            //property.SetMaxLength(100);
+                            property.SetColumnType("VARCHAHR(100)");
+                        }
+                }
+            }
         }
     }
 }

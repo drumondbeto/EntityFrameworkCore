@@ -56,7 +56,7 @@
             Console.WriteLine($"Total Registro(s): {registros}");
         }
 
-### Read:
+### Get:
 
     private static void ConsultarDados()
         {
@@ -88,18 +88,140 @@
 
 ## Update
 
+    - Atualizar Dados Modificando Apenas A Propriedade Alterada:
+
     private static void AtualizarDados()
         {
             using var db = new Data.ApplicationContext();
+
             var cliente = db.Clientes.Find(1);
+            // Solicita que a aplicacao encontre a entidade com a PK = 1
+
             cliente.Nome = "Cliente Alterado Passo 1";
 
-            //db.Clientes.Update(cliente);        
-            // Atualiza todos os atributos do objeto, não soh oq foi alterado.
+            db.SaveChanges();
+            // Metodo que deve ser chamado sempre que seja necessario salvar as alteracoes na Base de Dados.
+        }
+
+
+    - Atualizar Dados Modificando Todas As Propriedades, Modo 1:
+
+    private static void AtualizarDados()
+        {
+            using var db = new Data.ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            // Solicita que a aplicacao encontre a entidade com a PK = 1
+
+            cliente.Nome = "Cliente Alterado Passo 1";
+
+            db.Clientes.Update(cliente);        
+            // Atualiza todos as propriedades da instancia cliente, não soh oq foi alterado.
+            // Sem esse comando, eh atualizado apenas a propriedade que foi alterada.
+
+            db.SaveChanges();
+            // Metodo que deve ser chamado sempre que seja necessario salvar as alteracoes na Base de Dados.
+        }
+
+
+    - Atualizar Dados Modificando Todas As Propriedades, Modo 2:
+
+    private static void AtualizarDados()
+        {
+            using var db = new Data.ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            // Solicita que a aplicacao encontre a entidade com a PK = 1
+
+            cliente.Nome = "Cliente Alterado Passo 1";
 
             db.Entry(cliente).State = EntityState.Modified;
             // Informa de maneira explicita para o EF Core que o objeto foi modificado.
-            //Tambem ordena que todos os atributos daquele objeto devem ser atualizados.
+            // Tambem ordena que todas as propriedades da instancia cliente devem ser atualizados.
+
+            db.SaveChanges();
+            // Metodo que deve ser chamado sempre que seja necessario salvar as alteracoes na Base de Dados.
+        }
+
+    private static void AtualizarDados()
+        {
+            using var db = new Data.ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            // Solicita que a aplicacao encontre a entidade com a PK = 1
+
+            cliente.Nome = "Cliente Alterado Passo 1";
+
+            db.Clientes.Update(cliente);        
+            // Atualiza todos as propriedades da instancia cliente, não soh oq foi alterado.
+            // Sem esse comando, eh atualizado apenas a propriedade que foi alterada.
+
+            db.Entry(cliente).State = EntityState.Modified;
+            // Informa de maneira explicita para o EF Core que o objeto foi modificado.
+            // Tambem ordena que todas as propriedades da instancia cliente devem ser atualizados.
+
+            db.SaveChanges();
+            // Metodo que deve ser chamado sempre que seja necessario salvar as alteracoes na Base de Dados.
+        }
+
+    private static void AtualizarDadosEmCenarioDesconectado()
+        {
+            using var db = new Data.ApplicationContext();
+            
+            // Cenario Desconectado, quando os dados nao estao instanciados ainda:
+            var cliente = new Cliente
+            {
+                Id = 1
+            };
+
+            var clienteDesconectado = new   
+            {
+                Nome = "Cliente Desconectado Passo 3",
+                Telefone = "7966669999"
+            };
+
+            db.Attach(cliente);
+            db.Entry(cliente).CurrentValues.SetValues(clienteDesconectado);
+
+            db.SaveChanges();
+        }
+
+## Delete
+
+    private static void RemoverRegistro()
+        {
+            using var db = new Data.ApplicationContext();
+            var cliente = db.Clientes.Find(2);
+            db.Entry(cliente).State = EntityState.Deleted;
+
+            db.SaveChanges();
+        }
+
+    private static void RemoverRegistro()
+        {
+            using var db = new Data.ApplicationContext();
+            var cliente = db.Clientes.Find(2);
+            db.Clientes.Remove(cliente);
+            
+            db.SaveChanges();
+        }
+
+    private static void RemoverRegistro()
+        {
+            using var db = new Data.ApplicationContext();
+            var cliente = db.Clientes.Find(2);
+            db.Remove(cliente);
+
+            db.SaveChanges();
+        }
+
+    private static void RemoverRegistroDesconectado()
+        {
+            using var db = new Data.ApplicationContext();
+            
+            var cliente = new Cliente { Id = 3 };
+            
+            db.Entry(cliente).State = EntityState.Deleted;
 
             db.SaveChanges();
         }

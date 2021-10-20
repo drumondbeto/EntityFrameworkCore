@@ -16,6 +16,7 @@ namespace CursoEFCore
             // db.Database.Migrate();
 
             // Verifica se existe migracoes pendentes
+            
             var existe = db.Database.GetPendingMigrations().Any();
             if(existe)
             {
@@ -29,7 +30,20 @@ namespace CursoEFCore
             //ConsultarDados();
             //CadastrarPedido();
             //ConsultarPedidoCarregamentoAdiantado();
-            AtualizarDados();
+            //AtualizarDados();
+            RemoverRegistro();
+        }
+
+        private static void RemoverRegistro()
+        {
+            using var db = new Data.ApplicationContext();
+            //var cliente = db.Clientes.Find(2);
+            var cliente = new Cliente { Id = 4 };
+            //db.Clientes.Remove(cliente);
+            //db.Remove(cliente);
+            db.Entry(cliente).State = EntityState.Deleted;
+
+            db.SaveChanges();
         }
 
         private static void AtualizarDados()
@@ -37,7 +51,7 @@ namespace CursoEFCore
             using var db = new Data.ApplicationContext();
 
             //var cliente = db.Clientes.Find(1);
-            // Solicita que a aplicacao encontre a entidade com Id = 1
+            // Solicita que a aplicacao encontre a entidade com a PK = 1
 
             //cliente.Nome = "Cliente Alterado Passo 1";
 

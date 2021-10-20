@@ -35,29 +35,38 @@ namespace CursoEFCore
         private static void AtualizarDados()
         {
             using var db = new Data.ApplicationContext();
-            //var cliente = db.Clientes.Find(1);
 
+            //var cliente = db.Clientes.Find(1);
+            // Solicita que a aplicacao encontre a entidade com Id = 1
+
+            //cliente.Nome = "Cliente Alterado Passo 1";
+
+            //db.Clientes.Update(cliente);        
+            // Atualiza todos as propriedades da instancia cliente, não soh oq foi alterado.
+            // Sem esse comando, eh atualizado apenas a propriedade que foi alterada.
+
+            //db.Entry(cliente).State = EntityState.Modified;
+            // Informa de maneira explicita para o EF Core que o objeto foi modificado.
+            // Tambem ordena que todas as propriedades da instancia cliente devem ser atualizados.
+
+            //db.SaveChanges();
+            // Metodo que deve ser chamado sempre que seja necessario salvar as alteracoes na Base de Dados.
+
+
+            // Cenario Desconectado, quando os dados nao estao instanciados ainda:
             var cliente = new Cliente
             {
                 Id = 1
             };
 
-            var clienteDesconectado = new
+            var clienteDesconectado = new   
             {
                 Nome = "Cliente Desconectado Passo 3",
                 Telefone = "7966669999"
             };
-            //cliente.Nome = "Cliente Alterado Passo 1";
 
             db.Attach(cliente);
             db.Entry(cliente).CurrentValues.SetValues(clienteDesconectado);
-
-            //db.Clientes.Update(cliente);        
-            // Atualiza todos os atributos do objeto, não soh oq foi alterado.
-
-            //db.Entry(cliente).State = EntityState.Modified;
-            // Informa de maneira explicita para o EF Core que o objeto foi modificado.
-            //Tambem ordena que todos os atributos daquele objeto devem ser atualizados.
 
             db.SaveChanges();
         }

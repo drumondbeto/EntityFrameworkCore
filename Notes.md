@@ -1,6 +1,6 @@
-## Tips
+# Tips
 
-### Migrations:
+## Migrations:
 
     - Realizar migrations:
         db.Database.Migrate();
@@ -18,7 +18,7 @@
     dotnet ef database update -p CursoEFCore.csproj -v
 
 
-### Post:
+## Post:
 
     private static void InserirDados()
         {
@@ -56,7 +56,7 @@
             Console.WriteLine($"Total Registro(s): {registros}");
         }
 
-### Get:
+## Get:
 
     private static void ConsultarDados()
         {

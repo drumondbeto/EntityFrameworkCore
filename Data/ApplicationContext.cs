@@ -70,7 +70,7 @@ namespace CursoEFCore.Data
                 p.Property(p => p.CEP).HasColumnType("CHAR(8)").IsRequired();
                 p.Property(p => p.Estado).HasColumnType("CHAR(2)").IsRequired();
                 p.Property(p => p.Cidade).HasMaxLength(60).IsRequired();
-
+                // Gera uma variavel automatica para uma string com no max 60 caracteres.
                 p.HasIndex(i => i.Telefone).HasDatabaseName("idx_cliente_telefone");
             });
 
@@ -82,6 +82,7 @@ namespace CursoEFCore.Data
                 p.Property(p => p.Descricao).HasColumnType("VARCHAR(60)");
                 p.Property(p => p.Valor).IsRequired();
                 p.Property(p => p.TipoProduto).HasConversion<string>();
+                // Define como o Enum TipoProduto sera armazenado no banco de dados.
             });
 
             modelBuilder.Entity<Pedido>(p=>
@@ -93,9 +94,14 @@ namespace CursoEFCore.Data
                 p.Property(p => p.TipoFrete).HasConversion<int>();
                 p.Property(p => p.Observacao).HasColumnType("VARCHAR(512)");
 
+                // Configura o "Muitos para Um":
                 p.HasMany(p => p.Itens)
                     .WithOne(p => p.Pedido)
                     .OnDelete(DeleteBehavior.Cascade);
+                    // Faz com que os itens do pedido sejam deletados em cascata ao apagar um pedido.
+
+                    // .OnDelete(DeleteBehavior.Restrict); 
+                    // Poderia ser utilizado para obrigar o usuario a apagar os itens primeiro para poder apagar o pedido.
             });
 
             modelBuilder.Entity<PedidoItem>(p =>

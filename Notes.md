@@ -2,10 +2,12 @@
 
 ## Migrations:
 
-    - Realizar migrations:
+- Realizar migrations:
+
         db.Database.Migrate();
 
-    - Verifica se existe migracoes pendentes
+- Verifica se existe migracoes pendentes
+
         var existe = db.Database.GetPendingMigrations().Any();
         if(existe)
         {
@@ -19,6 +21,63 @@
 
 
 ## Post:
+
+- Modo 1, usando ActionResult:
+
+        [HttpPost]
+        public void Post([FromBody] string value)   // informa q algo com o nome value será buscado do Body
+        {
+        }
+
+    - Quando passamos como parametro um tipo complexo, não há necessidade de especificar o "[FromBody]", pois está implicito:
+
+            namespace MinhaAPICore.Controllers
+            {
+                [Route("api/[controller]")]
+                [ApiController]
+                public class ValuesController : ControllerBase
+                {
+                    [HttpPost]
+                    public void Post(Cliente cliente) 
+                    {
+                    }
+                }
+            }
+            public class ValuesController : ControllerBase
+            {
+                [HttpPost]
+                public void Post(Cliente cliente) 
+                {
+                }
+            }
+            
+    - Com modificadores que dizem qual tipo de dado a nossa Action vai produzir:
+
+            namespace MinhaAPICore.Controllers
+            {
+                [Route("api/[controller]")]
+                [ApiController]
+                public class ValuesController : ControllerBase
+                {
+                    [HttpPost]
+                    // Importante na hora de documentar no Swagger:
+                    [ProducesResponseType(typeof(Product), StatusCodes.Status201Created)] 
+                    // Vai produzir um response type que é um Produto
+                    // 201 é um Ok que é usado quando fazemos um insert
+                    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+                    public ActionResult Post(Product product) 
+                    {
+                        if(product.Id == 0) return BadRequest();
+
+                        // add no banco
+
+                        return CreatedAtAction("Post", product);
+                        // ou return CreatedAtAction(nameof(Post), product);
+                    }
+                }
+            }
+
+- Outros modos:
 
     private static void InserirDados()
         {
@@ -58,6 +117,23 @@
 
 ## Get:
 
+- Modo 1, Usado uma ActionResult que permite um IEnumerable<string>: 
+
+Permite que o retor no sera uma ActionResult (Ex: BadRequest(), Ok(), etc) ou um retorno conversível em String.
+
+        [HttpGet]
+        public ActioResult<IEnumerable<string>> ObterTodos()
+        {
+            var valores = new string[] { "value1", "value2" };
+
+            if (valores.Lenght < 5000)
+                return BadRequest();
+
+            return Ok(valores);
+        }
+
+- Outros modos:
+
     private static void ConsultarDados()
         {
             using var db = new Data.ApplicationContext();
@@ -88,7 +164,23 @@
 
 ## Update
 
-    - Atualizar Dados Modificando Apenas A Propriedade Alterada:
+- Modo 1, usando ActionResults:
+
+        [HttpPut("{id}")]
+        public void Put([FromRoute] int id, [FromBody] string value)
+        // "[FromRoute]" é desnecessario pois está implicito quando um parametro está com o mesmo nome que um elemento na rota.
+        {
+        }
+
+
+        [HttpPut("{id}")]
+        public void Put( int id, [FromForm] string value)
+        // O value é buscado em um Form Data.
+        {
+        }
+
+
+- Atualizar Dados Modificando Apenas A Propriedade Alterada:
 
     private static void AtualizarDados()
         {
@@ -104,7 +196,7 @@
         }
 
 
-    - Atualizar Dados Modificando Todas As Propriedades, Modo 1:
+- Atualizar Dados Modificando Todas As Propriedades, Modo 1:
 
     private static void AtualizarDados()
         {
@@ -124,7 +216,7 @@
         }
 
 
-    - Atualizar Dados Modificando Todas As Propriedades, Modo 2:
+- Atualizar Dados Modificando Todas As Propriedades, Modo 2:
 
     private static void AtualizarDados()
         {

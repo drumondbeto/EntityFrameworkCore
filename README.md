@@ -11,6 +11,3 @@ Repositório de estudos do Entity Framework Core.
 ### WHY
     O EF Core aumenta a produtividade uma vez que possibilita desenvolver aplicações sem precisar que escrevamos um comando SQL sequer.
     Ele nos permite focar nas regras de negócio, abstraindo totalmente a camada de acesso ao banco de dados.
-
-### HOW
-    Ao utilizar o comando ".SaveChanges()" é salvo todas as alterações realizadas no banco de dados. O EF Core traduz os comandos da aplicação em comandos SQL.
